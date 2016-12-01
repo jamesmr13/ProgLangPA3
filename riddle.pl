@@ -47,4 +47,4 @@ student(Major) :-
     unique([Major1, Major2, Major3, Major4, Major5]),
     unique([Genre1, Genre2, Genre3, Genre4, Genre5]),
     unique([Eats1, Eats2, Eats3, Eats4, Eats5]),
-    unique([Belongs1, Belongs2, Belongs3, Belongs4, Belongs5]).
+    unique([Belongs1, Belongs2, Belongs3, Belongs4, Belongs5]), !.
