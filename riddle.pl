@@ -1,6 +1,12 @@
+%the following three functions give a way for the code to know when
+%a room is located in a specic positon relative to another room
+
 next_to(N, M) :- M is N - 1; M is N + 1.
 right_of(N, M) :- M is N + 1.
 left_of(N, M) :- M is N - 1.
+
+%a check function for the end to make sure every different type of poster, major, etc
+%is unique by comparing each throughout the list
 
 uniquehelp(_, []).
 uniquehelp(A, [B|C]) :- A \= B, uniquehelp(A, C), uniquehelp(B, C).
@@ -9,6 +15,8 @@ unique([]).
 unique([H|T]) :- uniquehelp(H, T). 
 
 student(Major) :-
+%this sets up a list of each office for the problem, so when the rules
+%are entered they can be solved for each office
     Problem = [
         office(1, Poster1, Major1, Genre1, Eats1, Belongs1),
         office(2, Poster2, Major2, Genre2, Eats2, Belongs2),
@@ -17,6 +25,10 @@ student(Major) :-
         office(5, Poster5, Major5, Genre5, Eats5, Belongs5)
     ],
 
+%The rules are added individually from each hint give, if there is a 
+%missing attribue a blank line is used instead, all of these are added
+%to the problem to solve for the correct possibility
+ 
     member(office(_, cad, architecture, _, _, _), Problem),
     member(office(_, _, cse, _, _, flying), Problem),
     member(office(_, _, gs, scifi, _, _), Problem),
