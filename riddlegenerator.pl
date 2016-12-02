@@ -1,4 +1,4 @@
-:- dynamic hint/1.
+:- dynamic hint/1, rule/1.
 
 generateRiddle(Filename) :-
     open(Filename, read, S),
@@ -58,3 +58,31 @@ eats_pizza(List, X) :- nextto(X, pizza, List).
 is_major(List, X) :- nextto(X, major, List).
 has_poster(List, X) :- nextto(X, comic, List).
 office_next(List, X) :- nextto(next, X, List); nextto(left, X, List); nextto(right, X, List).
+
+% the solver
+student(Major) :-
+    findall(X, rule(X), Rules),
+    solve(Major, Rules).
+    
+solve(Major, Rules) :-
+    Problem = [
+        [1, Poster1, Major1, Genre1, Eats1, Belongs1],
+        [2, Poster2, Major2, Genre2, Eats2, Belongs2],
+        [3, Poster3, Major3, Genre3, Eats3, Belongs3],
+        [4, Poster4, Major4, Genre4, Eats4, Belongs4],
+        [5, Poster5, Major5, Genre5, Eats5, Belongs5]
+    ],
+    
+    Solution = [_, _, Major, _, _, taekwondo],
+    
+    check_rules(Solution, Rules, Problem).
+    
+check_rules(_, [], _).
+check_rules(Solution, [ [none|T1] |[]], Problem) :- member(T1, Problem), member(Solution, Problem).
+check_rules(Solution, [ [none|T1] | T], Problem) :- member(T1, Problem), member(Solution, Problem), check_rules(Solution, T, Problem).
+check_rules(Solution, [ [next_|T1]| T], Problem) :- nth0(0, T1, X), nth0(1, T1, Y), next_to(X, Y), member(Solution, Problem), check_rules(Solution, T, Problem).
+check_rules(Solution, [ [next_|T1]| []], Problem) :- nth0(0, T1, X), nth0(1, T1, Y), next_to(X, Y), member(Solution, Problem).
+check_rules(Solution, [ [left_|T1]| T], Problem) :- nth0(0, T1, X), nth0(1, T1, Y), left_of(X, Y), member(Solution, Problem), check_rules(Solution, T, Problem).
+check_rules(Solution, [ [left_|T1]| []], Problem) :- nth0(0, T1, X), nth0(1, T1, Y), left_of(X, Y), member(Solution, Problem).
+check_rules(Solution, [ [right_|T1]| T], Problem) :- nth0(0, T1, X), nth0(1, T1, Y), right_of(X, Y), member(Solution, Problem), check_rules(Solution, T, Problem).
+check_rules(Solution, [ [right_|T1]| []], Problem) :- nth0(0, T1, X), nth0(1, T1, Y), right_of(X, Y), member(Solution, Problem).
